@@ -63,7 +63,7 @@ type Index struct {
 
 // AllocIndex creates a new index
 func AllocIndex(indexType, method int, dims uint16) (*Index, error) {
-	idx := C.alloc_index(C.int(indexType), C.int(method), C.uint16_t(dims))
+	idx := C.alloc_index(C.int(indexType), C.int(method), C.uint16_t(dims), nil)
 	if idx == nil {
 		return nil, fmt.Errorf("Failed to allocate index")
 	}
