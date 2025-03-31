@@ -2,7 +2,7 @@ package victor
 
 /*
 #cgo LDFLAGS: -lvictor
-#include <victor.h>
+#include <victor/victor.h>
 #include <stdlib.h>
 */
 import "C"
@@ -100,41 +100,6 @@ func (idx *Index) Search(vector []float32, dims int) (*MatchResult, error) {
 		ID:       int(cResult.id),
 		Distance: float32(cResult.distance),
 	}, nil
-}
-
-func (idx *Index) SearchN(vector []float32, dims, n int) ([]MatchResult, error) {
-	if idx == nil || idx.ptr == nil {
-		return nil, fmt.Errorf("index is nil")
-	}
-	if n <= 0 {
-		return nil, fmt.Errorf("invalid number of results: %d", n)
-	}
-
-	// Convertir el vector Go a un puntero C
-	cVector := (*C.float)(unsafe.Pointer(&vector[0]))
-
-	// Crear un buffer en C para almacenar los resultados
-	var cResults *C.MatchResult
-
-	// Llamar a la función C
-	err := C.search_n(idx.ptr, cVector, C.uint16_t(dims), &cResults, C.int(n))
-	if e := toError(err); e != nil {
-		return nil, e
-	}
-
-	// Convertir los resultados de C a un slice de Go
-	cResultsSlice := unsafe.Slice(cResults, n)
-	results := make([]MatchResult, n)
-	for i := 0; i < n; i++ {
-		results[i] = MatchResult{
-			ID:       int(cResultsSlice[i].id),
-			Distance: float32(cResultsSlice[i].distance),
-		}
-	}
-
-	C.free(unsafe.Pointer(cResults))
-	fmt.Println(results)
-	return results, nil
 }
 
 // Delete removes a vector from the index by its ID
