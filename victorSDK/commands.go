@@ -57,6 +57,19 @@ type InsertVectorCommandOutput struct {
 	} `json:"results"`
 }
 
+type DeleteVectorCommandInput struct {
+	IndexName string `json:"index_name"`
+	VectorID  uint64 `json:"vector_id"`
+}
+
+type DeleteVectorCommandOutput struct {
+	Status  string `json:"status"`
+	Message string `json:"message"`
+	Results struct {
+		ID uint64 `json:"id"`
+	} `json:"results"`
+}
+
 type SearchVectorCommandInput struct {
 	IndexName string    `json:"index_name"`
 	TopK      int       `json:"top_k"`
@@ -65,5 +78,6 @@ type SearchVectorCommandInput struct {
 
 type SearchCommandOutput struct {
 	Status  string               `json:"status"`
+	Message string               `json:"message"`
 	Results *binding.MatchResult `json:"results"`
 }

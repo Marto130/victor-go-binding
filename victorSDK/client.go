@@ -186,3 +186,32 @@ func (c *Client) SearchVector(input *SearchVectorCommandInput) (*SearchCommandOu
 
 	return &output, nil
 }
+
+func (c *Client) DeleteVector(input *DeleteVectorCommandInput) (*DeleteVectorCommandOutput, error) {
+	req, err := http.NewRequest(http.MethodDelete, c.BaseURL+fmt.Sprintf(routes.DeleteVector, input.IndexName, input.VectorID), nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.HttpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		var errorResp map[string]string
+		if err := json.NewDecoder(resp.Body).Decode(&errorResp); err == nil {
+			return nil, fmt.Errorf("API error: %s", errorResp["message"])
+		}
+		return nil, fmt.Errorf("API error: status %d", resp.StatusCode)
+	}
+
+	var output DeleteVectorCommandOutput
+	if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+		return nil, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return &output, nil
+}

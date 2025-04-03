@@ -11,6 +11,7 @@ import (
 func RegisterRoutes(r *mux.Router) {
 	r.HandleFunc(routes.CreateIndexPath, handlers.CreateIndexHandler()).Methods(http.MethodPost)
 	r.HandleFunc(routes.InsertVectorPath, handlers.InsertVectorHandler).Methods(http.MethodPost)
+	r.HandleFunc(routes.DeleteVectorPath, handlers.DeleteVectorHandler).Methods(http.MethodDelete)
 	r.HandleFunc(routes.SearchVectorPath, handlers.SearchVectorHandler).Methods(http.MethodGet)
 }
 

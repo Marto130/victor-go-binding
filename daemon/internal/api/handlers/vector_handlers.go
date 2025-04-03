@@ -47,10 +47,8 @@ func InsertVectorHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := models.InsertVectorResponse{
-		Response: models.Response{
-			Status:  "success",
-			Message: "Vector inserted successfully",
-		},
+		Status:  "success",
+		Message: "Vector inserted successfully",
 		Results: models.InsertVectorResult{
 			ID:     req.ID,
 			Vector: req.Vector,
@@ -60,6 +58,44 @@ func InsertVectorHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
 
+}
+
+func DeleteVectorHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("--DELETE HANDLER--")
+	vars := mux.Vars(r)
+	indexName := vars["indexName"]
+	vectorID := vars["vectorID"]
+
+	indexResource, exists := store.GetIndex(indexName)
+	if !exists {
+		http.Error(w, "Index not found", http.StatusNotFound)
+		return
+	}
+
+	vIndex := indexResource.VIndex
+
+	id, err := strconv.Atoi(vectorID)
+	if err != nil {
+		http.Error(w, "Invalid vector ID", http.StatusBadRequest)
+		return
+	}
+
+	err = vIndex.Delete(uint64(id))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	response := models.DeleteVectorResponse{
+		Status:  "200",
+		Message: "Vector deleted successfully",
+		Results: models.DeleteVectorResult{
+			ID: uint64(id),
+		},
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
 }
 
 func SearchVectorHandler(w http.ResponseWriter, r *http.Request) {
@@ -122,10 +158,8 @@ func SearchVectorHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := models.SearchVectorResponse{
-		Response: models.Response{
-			Status:  "success",
-			Message: "Search completed successfully",
-		},
+		Status:  "success",
+		Message: "Search completed successfully",
 		Results: models.SearchVectorResult{
 			ID:       uint64(result.ID),
 			Distance: result.Distance,

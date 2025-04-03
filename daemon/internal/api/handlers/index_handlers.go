@@ -59,10 +59,8 @@ func CreateIndexHandler() http.HandlerFunc {
 		store.StoreIndex(&indexResource)
 
 		response := models.CreateIndexResponse{
-			Response: models.Response{
-				Status:  "success",
-				Message: "Index created successfully",
-			},
+			Status:  "success",
+			Message: "Index created successfully",
 			Results: models.CreateIndexResult{
 				IndexName: indexNameParam,
 				ID:        indexID,

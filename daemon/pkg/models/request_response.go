@@ -1,11 +1,5 @@
 package models
 
-type Response struct {
-	Status  string      `json:"status"`
-	Message string      `json:"message,omitempty"`
-	Results interface{} `json:"results,omitempty"`
-}
-
 type CreateIndexResult struct {
 	IndexName string `json:"index_name"`
 	ID        string `json:"id"`
@@ -17,6 +11,10 @@ type CreateIndexResult struct {
 type InsertVectorResult struct {
 	ID     uint64    `json:"id"`
 	Vector []float32 `json:"vector"`
+}
+
+type DeleteVectorResult struct {
+	ID uint64 `json:"id"`
 }
 
 type SearchVectorResult struct {
@@ -31,8 +29,9 @@ type CreateIndexRequest struct {
 }
 
 type CreateIndexResponse struct {
-	Response Response          `json:"response"`
-	Results  CreateIndexResult `json:"results"`
+	Status  string            `json:"status"`
+	Message string            `json:"message,omitempty"`
+	Results CreateIndexResult `json:"results"`
 }
 
 type InsertVectorRequest struct {
@@ -41,8 +40,15 @@ type InsertVectorRequest struct {
 }
 
 type InsertVectorResponse struct {
-	Response Response           `json:"response"`
-	Results  InsertVectorResult `json:"results"`
+	Status  string             `json:"status"`
+	Message string             `json:"message,omitempty"`
+	Results InsertVectorResult `json:"results"`
+}
+
+type DeleteVectorResponse struct {
+	Status  string             `json:"status"`
+	Message string             `json:"message,omitempty"`
+	Results DeleteVectorResult `json:"results"`
 }
 
 type SearchVectorRequest struct {
@@ -50,6 +56,7 @@ type SearchVectorRequest struct {
 	Vector []float32 `json:"vector"`
 }
 type SearchVectorResponse struct {
-	Response Response           `json:"response"`
-	Results  SearchVectorResult `json:"results"`
+	Status  string             `json:"status"`
+	Message string             `json:"message,omitempty"`
+	Results SearchVectorResult `json:"results"`
 }
