@@ -10,19 +10,19 @@ var (
 	indexMutex sync.RWMutex
 )
 
-func GetIndex(indexID string) (*models.IndexResource, bool) {
+func GetIndex(indexName string) (*models.IndexResource, bool) {
 	indexMutex.RLock()
 	defer indexMutex.RUnlock()
 
-	index, exists := indexStore[indexID]
+	index, exists := indexStore[indexName]
 	return index, exists
 }
 
-func GetIndexDims(indexID string) (uint16, bool) {
+func GetIndexDims(indexName string) (uint16, bool) {
 	indexMutex.RLock()
 	defer indexMutex.RUnlock()
 
-	index, exists := indexStore[indexID]
+	index, exists := indexStore[indexName]
 	if !exists {
 		return 0, false
 	}
@@ -33,5 +33,5 @@ func StoreIndex(indexResource *models.IndexResource) {
 	indexMutex.Lock()
 	defer indexMutex.Unlock()
 
-	indexStore[indexResource.IndexID] = indexResource
+	indexStore[indexResource.IndexName] = indexResource
 }

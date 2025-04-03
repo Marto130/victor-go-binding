@@ -1,43 +1,55 @@
 package models
 
-import (
-	binding "victorgo/binding"
-)
-
-// Request represents the structure of a request to the API.
-type Request struct {
-	Action string      `json:"action"`
-	Data   interface{} `json:"data"`
-}
-
-// Response represents the structure of a response from the API.
 type Response struct {
 	Status  string      `json:"status"`
 	Message string      `json:"message,omitempty"`
-	Data    interface{} `json:"data,omitempty"`
+	Results interface{} `json:"results,omitempty"`
 }
 
-// IndexRequest represents a request to create an index
+type CreateIndexResult struct {
+	IndexName string `json:"index_name"`
+	ID        string `json:"id"`
+	Dims      uint16 `json:"dims"`
+	IndexType int    `json:"index_type"`
+	Method    int    `json:"method"`
+}
+
+type InsertVectorResult struct {
+	ID     uint64    `json:"id"`
+	Vector []float32 `json:"vector"`
+}
+
+type SearchVectorResult struct {
+	ID       uint64  `json:"id"`
+	Distance float32 `json:"distance"`
+}
+
 type CreateIndexRequest struct {
 	IndexType int    `json:"index_type"`
 	Method    int    `json:"method"`
 	Dims      uint16 `json:"dims"`
 }
 
-// InsertVectorRequest represents a request to insert a vector into the database
+type CreateIndexResponse struct {
+	Response Response          `json:"response"`
+	Results  CreateIndexResult `json:"results"`
+}
+
 type InsertVectorRequest struct {
 	ID     uint64    `json:"id"`
 	Vector []float32 `json:"vector"`
 }
 
-// SearchVectorRequest represents a request to search for a vector in the database
-// type SearchVectorRequest struct {
-// 	Vector  []float32 `json:"vector"`
-// 	IndexID string    `json:"index_id"`
-// }
+type InsertVectorResponse struct {
+	Response Response           `json:"response"`
+	Results  InsertVectorResult `json:"results"`
+}
 
-type IndexResource struct {
-	CreateIndexRequest
-	IndexID string `json:"index_id"`
-	VIndex  *binding.Index
+type SearchVectorRequest struct {
+	TopK   int       `json:"top_k"`
+	Vector []float32 `json:"vector"`
+}
+type SearchVectorResponse struct {
+	Response Response           `json:"response"`
+	Results  SearchVectorResult `json:"results"`
 }

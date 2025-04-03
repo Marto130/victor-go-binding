@@ -12,7 +12,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// InsertVector handles the insertion of a vector into the index
 func InsertVectorHandler(w http.ResponseWriter, r *http.Request) {
 	var req models.InsertVectorRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -21,21 +20,22 @@ func InsertVectorHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	indexIDParam := r.URL.Query().Get("index_id")
+	urlParams := mux.Vars(r)
+	indexNameParam := urlParams["indexName"]
 
-	indexResource, exists := store.GetIndex(indexIDParam)
+	indexResource, exists := store.GetIndex(indexNameParam)
 	if !exists {
 		http.Error(w, "Index not found", http.StatusNotFound)
 		return
 	}
-
 	vIndex := indexResource.VIndex
 
-	dims, dimsExists := store.GetIndexDims(indexIDParam)
+	dims, dimsExists := store.GetIndexDims(indexNameParam)
 	if !dimsExists {
 		http.Error(w, "Index dimensions not found", http.StatusNotFound)
 		return
 	}
+
 	if len(req.Vector) != int(dims) {
 		http.Error(w, "Vector dimensions do not match index dimensions", http.StatusBadRequest)
 		return
@@ -45,24 +45,35 @@ func InsertVectorHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	response := models.InsertVectorResponse{
+		Response: models.Response{
+			Status:  "success",
+			Message: "Vector inserted successfully",
+		},
+		Results: models.InsertVectorResult{
+			ID:     req.ID,
+			Vector: req.Vector,
+		},
+	}
+
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(models.Response{
-		Status:  "success",
-		Message: "Vector inserted successfully",
-	})
+	json.NewEncoder(w).Encode(response)
 
 }
 
-// SearchVector handles searching for a vector in the index
 func SearchVectorHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("--SEARCH HANDLER--")
 	vars := mux.Vars(r)
-	indexID := vars["indexID"]
+	indexName := vars["indexName"]
 
-	indexResource, exists := store.GetIndex(indexID)
+	indexResource, exists := store.GetIndex(indexName)
 	if !exists {
 		http.Error(w, "Index not found", http.StatusNotFound)
 		return
 	}
+
+	fmt.Println("Index name:", indexName)
 
 	vIndex := indexResource.VIndex
 
@@ -72,8 +83,26 @@ func SearchVectorHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	kParam := r.URL.Query().Get("top_k")
+	var k int
+	var err error
+	if kParam != "" {
+		k, err = strconv.Atoi(kParam)
+		if err != nil {
+			http.Error(w, "Invalid k parameter", http.StatusBadRequest)
+			return
+		}
+		if k <= 0 {
+			http.Error(w, "k must be greater than 0", http.StatusBadRequest)
+			return
+		}
+	} else {
+		k = 5
+	}
+
 	vectorStrings := strings.Split(vectorParam, ",")
 	vector := make([]float32, len(vectorStrings))
+
 	for i, s := range vectorStrings {
 		val, err := strconv.ParseFloat(s, 32)
 		if err != nil {
@@ -83,15 +112,26 @@ func SearchVectorHandler(w http.ResponseWriter, r *http.Request) {
 		vector[i] = float32(val)
 	}
 
-	result, err := vIndex.Search(vector, len(vector))
+	fmt.Println("Vector to search:", vector)
+	fmt.Println("topK:", k)
+
+	result, err := vIndex.Search(vector, k)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	response := models.SearchVectorResponse{
+		Response: models.Response{
+			Status:  "success",
+			Message: "Search completed successfully",
+		},
+		Results: models.SearchVectorResult{
+			ID:       uint64(result.ID),
+			Distance: result.Distance,
+		},
+	}
+
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(models.Response{
-		Status: "success",
-		Data:   result,
-	})
+	json.NewEncoder(w).Encode(response)
 }

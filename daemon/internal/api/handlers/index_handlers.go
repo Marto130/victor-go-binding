@@ -4,22 +4,30 @@ import (
 	"encoding/json"
 	"net/http"
 	"sync"
-	binding "victorgo/binding"
 	"victorgo/daemon/pkg/models"
 	"victorgo/daemon/pkg/store"
 
+	binding "victorgo/binding"
+
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
 
 var (
 	indexMutex sync.RWMutex
 )
 
-// CreateIndexHandler handles the creation of a new index
 func CreateIndexHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var createIndexRequest models.CreateIndexRequest
+
+		urlParams := mux.Vars(r)
+		indexNameParam := urlParams["indexName"]
+		if indexNameParam == "" {
+			http.Error(w, "Index name is required", http.StatusBadRequest)
+			return
+		}
 
 		indexMutex.Lock()
 		defer indexMutex.Unlock()
@@ -43,13 +51,30 @@ func CreateIndexHandler() http.HandlerFunc {
 				Method:    createIndexRequest.Method,
 				Dims:      createIndexRequest.Dims,
 			},
-			IndexID: indexID,
-			VIndex:  index,
+			VIndex:    index,
+			IndexName: indexNameParam,
+			IndexID:   indexID,
 		}
 
 		store.StoreIndex(&indexResource)
 
+		response := models.CreateIndexResponse{
+			Response: models.Response{
+				Status:  "success",
+				Message: "Index created successfully",
+			},
+			Results: models.CreateIndexResult{
+				IndexName: indexNameParam,
+				ID:        indexID,
+				Dims:      createIndexRequest.Dims,
+				IndexType: createIndexRequest.IndexType,
+				Method:    createIndexRequest.Method,
+			},
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]string{"message": "Index created successfully", "id": indexID})
+		json.NewEncoder(w).Encode(response)
 	}
 }
