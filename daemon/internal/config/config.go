@@ -8,7 +8,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Config holds the configuration settings for the daemon
 type Config struct {
 	Host        string
 	Port        string
@@ -57,7 +56,6 @@ func LoadConfig() (*Config, error) {
 	}, nil
 }
 
-// getEnv retrieves the value of the environment variable or returns the default value
 func getEnv(key, defaultValue string) string {
 	if value, exists := os.LookupEnv(key); exists {
 		return value

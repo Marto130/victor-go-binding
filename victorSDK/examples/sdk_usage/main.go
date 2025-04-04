@@ -12,7 +12,6 @@ func main() {
 		Host: "localhost",
 		Port: "8080",
 	})
-	// defer client.Close()
 
 	indexParams := victorSDK.CreateIndexCommandInput{
 		IndexType: 0,
@@ -86,6 +85,4 @@ func main() {
 	}
 	fmt.Printf("%s\n%s\n%+v\n", deleteResult.Status, deleteResult.Message, deleteResult.Results)
 
-	// client.Close()
-	// fmt.Println("Client closed")
 }

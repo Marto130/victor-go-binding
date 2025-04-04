@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	// "victorgo/daemon/cmd/http_daemon"
 	"victorgo/daemon/pkg/routes"
 )
 
@@ -47,22 +45,6 @@ func NewClient(options *ClientOptions) *Client {
 
 	return client
 }
-
-// func (c *Client) Close() error {
-// 	if c.IsLocal && c.Daemon != nil {
-// 		return c.Daemon.Stop()
-// 	}
-// 	return nil
-// }
-
-// func isPortInUse(port string) bool {
-// 	conn, err := net.Listen("tcp", ":"+port)
-// 	if err != nil {
-// 		return true // El puerto está en uso
-// 	}
-// 	conn.Close()
-// 	return false
-// }
 
 func (c *Client) CreateIndex(input *CreateIndexCommandInput) (*CreateIndexCommandOutput, error) {
 	jsonData, err := json.Marshal(input)
@@ -129,11 +111,6 @@ func (c *Client) InsertVector(input *InsertVectorCommandInput) (*InsertVectorCom
 			return nil, fmt.Errorf("API error (%d): %s", resp.StatusCode, errorResp["message"])
 		}
 	}
-
-	// bodyBytes, _ := io.ReadAll(resp.Body)
-	// fmt.Println("Respuesta JSON sin procesar:", string(bodyBytes))
-	// // Restaurar el body para la decodificación
-	// resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
 	var output InsertVectorCommandOutput
 	if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
