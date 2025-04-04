@@ -19,8 +19,8 @@ func main() {
 
 	// Start the server
 	address := cfg.Host + ":" + cfg.Port
-	log.Printf("Victor daemon running on Port: %s", cfg.Port)
+	log.Printf("Victord running on Port: %s", cfg.Port)
 	if err := http.ListenAndServe(address, router); err != nil {
-		log.Fatalf("Error starting Victor daemon: %v", err)
+		log.Fatalf("Error starting Victord: %v", err)
 	}
 }
