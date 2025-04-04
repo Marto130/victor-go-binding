@@ -3,14 +3,13 @@ package victorSDK
 import (
 	"net/http"
 	binding "victorgo/binding"
-	"victorgo/daemon/cmd/http_daemon"
 )
 
 type Client struct {
 	HttpClient *http.Client
 	BaseURL    string
 	IsLocal    bool
-	Daemon     *http_daemon.Server
+	// Daemon     *http_daemon.Server
 }
 
 type ClientOptions struct {

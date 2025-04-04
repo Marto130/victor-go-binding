@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -30,7 +29,7 @@ func LoadConfig() (*Config, error) {
 	var loaded bool
 	for _, path := range envPaths {
 		if err := godotenv.Load(path); err == nil {
-			log.Printf("Configuración cargada desde %s", path)
+			fmt.Printf("Config updated from %s", path)
 			loaded = true
 			break
 		}
@@ -38,18 +37,18 @@ func LoadConfig() (*Config, error) {
 
 	if configPath := os.Getenv("VICTOR_CONFIG_PATH"); configPath != "" {
 		if err := godotenv.Load(configPath); err == nil {
-			log.Printf("Configuración cargada desde %s (VICTOR_CONFIG_PATH)", configPath)
+			fmt.Printf("Configuration updated from %s (VICTOR_CONFIG_PATH)", configPath)
 			loaded = true
 		}
 	}
 
 	if !loaded {
-		log.Println("No se encontró archivo .env, usando valores predeterminados")
+		fmt.Println(".env file not found, using default values")
 	}
 
 	port := getEnv("PORT", "8080")
 	host := getEnv("HOST", "localhost")
-	databaseURL := getEnv("DATABASE_URL", "localhost:5432")
+	databaseURL := getEnv("DATABASE_URL", fmt.Sprintf("localhost:%s", port))
 
 	return &Config{
 		Host:        host,
