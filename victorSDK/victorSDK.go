@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
-	"victorgo/daemon/pkg/routes"
+	"victorgo/victorSDK/pkg/routes"
 )
 
 func NewClient(options *ClientOptions) *Client {

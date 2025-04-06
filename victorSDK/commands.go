@@ -2,14 +2,18 @@ package victorSDK
 
 import (
 	"net/http"
-	binding "victorgo/binding"
 )
 
 type Client struct {
 	HttpClient *http.Client
 	BaseURL    string
 	IsLocal    bool
-	// Daemon     *http_daemon.Server
+}
+
+// VB = Victor binding
+type VBMatchResult struct {
+	ID       int     `json:"id"`
+	Distance float32 `json:"distance"`
 }
 
 type ClientOptions struct {
@@ -76,7 +80,7 @@ type SearchVectorCommandInput struct {
 }
 
 type SearchCommandOutput struct {
-	Status  string               `json:"status"`
-	Message string               `json:"message"`
-	Results *binding.MatchResult `json:"results"`
+	Status  string        `json:"status"`
+	Message string        `json:"message"`
+	Results VBMatchResult `json:"results"`
 }
