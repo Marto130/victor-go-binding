@@ -1,3 +1,48 @@
-**/libvictor.dylib
-**/*.env*
-**/*.bin
+# Compiled binaies
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# output folders
+bin/*
+!bin/
+!bin/**/
+
+**/build/
+
+**/dist/
+
+# module and cache directories
+/pkg/
+/vendor/
+*.mod.*
+go.sum
+
+# test cache
+*.coverprofile
+*.test
+
+# temporary system files
+.DS_Store
+Thumbs.db
+
+# environment files
+**/.env
+**/.env.*
+
+# Configs IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+
+
+# Logs
+*.log
