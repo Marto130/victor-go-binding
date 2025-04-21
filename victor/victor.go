@@ -1,8 +1,8 @@
 package victor
 
 /*
-#cgo CFLAGS: -I/Users/juan.irigoin/workspace/victor/victorgo/include
-#cgo LDFLAGS: -L/Users/juan.irigoin/workspace/victor/victorgo/lib -lvictor
+#cgo CFLAGS: -I${SRCDIR}/../include
+#cgo LDFLAGS: -L${SRCDIR}/../lib -lvictor
 #include <victor/victor.h>
 #include <stdlib.h>
 */
