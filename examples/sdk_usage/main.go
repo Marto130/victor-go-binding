@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+
 	"victorgo/victorSDK"
 )
 
 func main() {
-
 	client := victorSDK.NewClient(&victorSDK.ClientOptions{
 		Host: "localhost",
 		Port: "8080",
@@ -84,5 +84,4 @@ func main() {
 		log.Fatalf("Delete vector error: %+v", err)
 	}
 	fmt.Printf("%s\n%s\n%+v\n", deleteResult.Status, deleteResult.Message, deleteResult.Results)
-
 }

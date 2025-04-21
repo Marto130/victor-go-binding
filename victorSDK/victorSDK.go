@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
 	"victorgo/victorSDK/pkg/routes"
 )
 
@@ -121,7 +122,6 @@ func (c *Client) InsertVector(input *InsertVectorCommandInput) (*InsertVectorCom
 }
 
 func (c *Client) SearchVector(input *SearchVectorCommandInput) (*SearchCommandOutput, error) {
-
 	vectorValues := make([]string, len(input.Vector))
 	for i, v := range input.Vector {
 		vectorValues[i] = fmt.Sprintf("%f", v)

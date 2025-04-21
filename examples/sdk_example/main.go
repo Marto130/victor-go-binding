@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+
 	"victorgo/victor"
 )
 
