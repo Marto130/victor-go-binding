@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/Marto130/victor-go-binding/index"
-	"github.com/Marto130/victor-go-binding/victor"
+	"victorgo/index"
+	"victorgo/victor"
 )
 
 // Constants for the index and test parameters

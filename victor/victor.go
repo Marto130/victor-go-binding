@@ -5,15 +5,13 @@ package victor
 #cgo LDFLAGS: -L${SRCDIR}/../lib -lvictor
 #include <victor/victor.h>
 #include <stdlib.h>
-#include <string.h>
 */
 import "C"
 
 import (
 	"fmt"
 	"unsafe"
-
-	idx "github.com/Marto130/victor-go-binding/index"
+	idx "victorgo/index"
 )
 
 // ErrorCode maps C error codes to Go

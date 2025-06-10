@@ -1,3 +1,3 @@
-module github.com/Marto130/victor-go-binding
+module victorgo
 
 go 1.24.1
