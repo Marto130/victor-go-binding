@@ -11,7 +11,8 @@ import "C"
 import (
 	"fmt"
 	"unsafe"
-	idx "victorgo/index"
+
+	idx "github.com/Marto130/victor-go-binding/index"
 )
 
 // ErrorCode maps C error codes to Go
